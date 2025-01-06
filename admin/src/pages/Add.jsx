@@ -37,7 +37,8 @@ const Add = ({ token }) => {
       image3 && formData.append("image3", image3);
       image4 && formData.append("image4", image4);
 
-      //   console.log(image1)
+      console.log(image1);
+      console.log([...formData.entries()], "formData aaa");
 
       const response = await axios.post(
         backendUrl + "/app/product/add",
@@ -57,7 +58,7 @@ const Add = ({ token }) => {
       } else {
         toast.error(response.data.message);
       }
-      //   console.log(response.data);
+      console.log(response.data, "ads  responde");
     } catch (error) {
       console.log(error);
       toast.error(error.message);

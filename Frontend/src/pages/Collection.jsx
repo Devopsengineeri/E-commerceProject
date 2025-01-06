@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import ShopContext from "../Context/ShopContext";
+import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import Title from "../Components/Title";
 import ProductItem from "../Components/ProductItem";
@@ -71,7 +71,7 @@ function Collection() {
 
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory, search, showSearch]);
+  }, [category, subCategory, search, showSearch, products]);
 
   return (
     <div className=" flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">

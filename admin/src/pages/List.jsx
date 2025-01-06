@@ -66,8 +66,13 @@ const List = ({ token }) => {
             className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py- px-2 border text-sm "
             key={index}
           >
-            <img className="w-12" src={item.image[0]} alt="" />
-            {console.log(item.image[0])}
+            <img
+              className="w-12"
+              src={`http://localhost:4000${item.images[0]}`}
+              // src={item.image[0]}
+              alt=""
+            />
+            {console.log(item.images[0], "list add aaaaa")}
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>

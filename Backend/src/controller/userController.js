@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
     if (exists) {
       return res.json({ success: false, message: "User already exists" });
     }
-
+    console.log(registerUser, "qqq");
     if (!validator.isEmail(email)) {
       return res.json({
         success: false,
@@ -95,7 +95,7 @@ const adminLogin = async (req, res) => {
     //   return res.json({ success: false, message: "Invalid credentials" });
     // }
 
-    //const token = createToken(admin._id);
+    // const token = createToken(admin._id);
     // res.json({ success: true, token });
   } catch (error) {
     console.error(error);

@@ -1,5 +1,5 @@
 //function for add product info
-import { v2 as cloudinary } from "cloudinary";
+
 import productModel from "../model/productModel.js";
 
 const addProject = async (req, res) => {
@@ -7,48 +7,44 @@ const addProject = async (req, res) => {
     const {
       name,
       description,
+
       price,
       category,
       subCategory,
       sizes,
       bestseller,
     } = req.body;
-
+    // console.log(addProject, "body req");
     const image1 = req.files?.image1?.[0];
     const image2 = req.files?.image2?.[0];
     const image3 = req.files?.image3?.[0];
     const image4 = req.files?.image4?.[0];
 
-    const images = [image1, image2, image3, image4].filter(Boolean);
-
-    // Upload images to Cloudinary
-    const imagesUrl = await Promise.all(
-      images.map(async (item) => {
-        const result = await cloudinary.uploader.upload(item.path, {
-          resource_type: "image",
-        });
-        return result.secure_url;
-      })
+    const images = [image1, image2, image3, image4].filter(
+      (item) => item !== undefined
     );
 
+    const imageUrl = images.map((image) => `/uploads/${image.filename}`);
+    // console.log(imageUrl, "hhhhhhhhhhh");
     const productData = {
       name,
       description,
       category,
       price: Number(price),
       subCategory,
-      bestseller: bestseller === "true", // Convert bestseller to boolean
-      sizes: JSON.parse(sizes), // Parse sizes JSON
-      images: imagesUrl,
-      date: Date.now(), // Corrected key from `data` to `date`
+      bestseller: bestseller === "true", //
+      sizes: JSON.parse(sizes),
+      images: imageUrl,
+      date: Date.now(),
     };
 
     // Save the product to the database
     const product = new productModel(productData);
     await product.save();
 
-    console.log(imagesUrl, "Uploaded Image URLs");
+    console.log(imageUrl, "Uploaded Image URLs");
     console.log(productData, "Product Details");
+    console.log(req.files, "Uploaded Files");
 
     res.status(201).json({
       success: true,
@@ -85,7 +81,7 @@ const listProject = async (req, res) => {
 //function for removing product info
 const removeProject = async (req, res) => {
   try {
-    const product = await productModel.findByIdAndDelete(req.res.id);
+    const product = await productModel.findByIdAndDelete(req.body.id);
 
     if (!product) {
       return res.status(404).json({

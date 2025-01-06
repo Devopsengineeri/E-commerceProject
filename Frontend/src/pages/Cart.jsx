@@ -8,23 +8,27 @@ import Footer from "../Components/Footer";
 const Cart = () => {
   const { products, currency, cartItems, updateQuantity, navigate } =
     useContext(ShopContext);
-  const [CartData, setCartData] = useState([]);
+  const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
-    const tempData = [];
-    for (const items in cartItems) {
-      for (const item in cartItems[items]) {
-        if (cartItems[items][item] > 0) {
-          tempData.push({
-            _id: items,
-            size: item,
-            quantity: cartItems[items][item],
-          });
+    if (products.length > 0) {
+      const tempData = [];
+      for (const items in cartItems) {
+        for (const item in cartItems[items]) {
+          if (cartItems[items][item] > 0) {
+            tempData.push({
+              _id: items,
+              size: item,
+              quantity: cartItems[items][item],
+            });
+          }
         }
       }
+      setCartData(tempData); // Update the state with tempData
+
+      console.log(tempData, "aetcartdata");
     }
-    setCartData(tempData); // Update the state with tempData
-  }, [cartItems]);
+  }, [cartItems, products]);
 
   return (
     <div>
@@ -33,7 +37,7 @@ const Cart = () => {
           <Title text1={"YOUR"} text2={"CART"}></Title>
         </div>
         <div>
-          {CartData.map((item, index) => {
+          {cartData.map((item, index) => {
             const productData = products.find(
               (product) => product._id === item._id
             );
@@ -74,7 +78,7 @@ const Cart = () => {
                   </div>
                 </div>
                 <input
-                  onClick={(e) =>
+                  onChange={(e) =>
                     e.target.value === "" || e.target.value === "0"
                       ? null
                       : updateQuantity(
