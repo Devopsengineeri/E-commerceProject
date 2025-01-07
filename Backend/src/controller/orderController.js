@@ -1,4 +1,5 @@
 // Placing orders using COD method
+import orderModel from "../model/OrderModel.js";
 const placeOrder = async (req, res) => {
   try {
     const { userId, items, amount, address } = req.body;
@@ -7,6 +8,7 @@ const placeOrder = async (req, res) => {
       items,
       amount,
       address,
+      status: "Order Placed",
       paymentMethod: "COD",
       payment: false,
       date: Date.now(),
@@ -15,11 +17,10 @@ const placeOrder = async (req, res) => {
     const newOrder = new orderModel(orderData);
     await newOrder.save();
 
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
+    await orderModel.findByIdAndUpdate(userId, { cartData: {} });
 
     res.json({ success: true, message: "Order Placed" });
   } catch (error) {
-    console.log(error);
     res.json({ success: false, message: error.message });
   }
 };
@@ -31,13 +32,38 @@ const placeOrderStripe = async (req, res) => {};
 const placeOrderRazorpay = async (req, res) => {};
 
 // Placing orders using allOrder method
-const allOrders = async (req, res) => {};
+const allOrders = async (req, res) => {
+  try {
+    const orders = await orderModel.find({});
+    res.json({ success: true, orders });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
 
-// Placing orders using userUpdate method
-const userOrders = async (req, res) => {};
+// user order  data for frontend
+const userOrders = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const orders = await orderModel.find({ userId });
+    res.json({ success: true, orders });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
 
 // Placing orders using updateStatus method
-const updateStatus = async (req, res) => {};
+const updateStatus = async (req, res) => {
+  try {
+    const { orderId, status } = req.body;
+    await orderModel.findByIdAndUpdate(orderId, { status });
+    res.json({ success: true, message: "Status Updated" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
 
 export {
   placeOrder,

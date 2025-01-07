@@ -1,8 +1,10 @@
 import React, { useContext, useState } from "react";
+import axios from "axios";
 import Title from "../Components/Title";
 import CartTolal from "../Components/CartTolal";
 import { assets } from "../assets/assets";
 import ShopContext from "../Context/ShopContext";
+import { toast } from "react-toastify";
 function PlaceOrder() {
   const {
     navigate,
@@ -52,8 +54,36 @@ function PlaceOrder() {
           }
         }
       }
-      console.log(orderItems);
-    } catch (error) {}
+      let orderData = {
+        address: formData,
+        items: orderItems,
+        amount: getCartAmount() + delivery_fee,
+      };
+      switch (method) {
+        //API calls for cod
+        case "cod":
+          const response = await axios.post(
+            backendUrl + "/app/order/place",
+            orderData,
+            { headers: { token } }
+          );
+          console.log(response, "response");
+          if (response.data.success) {
+            setCartItems({});
+            navigate("/order");
+          } else {
+            toast.error(response.data.message);
+          }
+          break;
+
+        default:
+          toast.error("Unsupported payment method");
+          break;
+      }
+    } catch (error) {
+      console.log(error, "error of response");
+      toast.error(response.data.message);
+    }
   };
   return (
     <form
@@ -146,7 +176,7 @@ function PlaceOrder() {
         <input
           required
           onChange={onChangeHandler}
-          name="Phone"
+          name="phone"
           value={formData.phone}
           className="border border-gray-300 rounded py-1.5 px-3.5 w-2/3"
           type="number"

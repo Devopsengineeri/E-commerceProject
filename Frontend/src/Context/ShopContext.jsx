@@ -138,6 +138,7 @@ export const ShopContextProvider = (props) => {
     setToken,
     token,
     backendUrl,
+    setCartItems,
   };
 
   useEffect(() => {

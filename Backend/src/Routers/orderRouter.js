@@ -12,7 +12,7 @@ import {
 import authUser from "../middleware/auth.js";
 
 const orderRouter = express.Router();
-orderRouter.post("/lost", adminAuth, allOrders);
+orderRouter.post("/list", adminAuth, allOrders);
 
 orderRouter.post("/status", adminAuth, updateStatus);
 
